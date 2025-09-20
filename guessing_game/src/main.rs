@@ -35,7 +35,7 @@ fn main() {
             }
             Err(err) => {
                 println!("Please type a number! {}", err);
-                continue; // guess.clear() 제거 - 루프 시작에서 이미 처리됨
+                continue;
             }
         };
 
