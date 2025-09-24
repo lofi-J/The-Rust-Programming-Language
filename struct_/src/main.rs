@@ -1,22 +1,28 @@
 #[derive(Debug)]
-struct User {
-    username: String,
-    email: String,
-    password: String,
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn new(width: u32, height: u32) -> Self {
+        Self { width, height }
+    }
+
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
 }
 
 fn main() {
-    println!("Hello, world!");
-
-    let user1 = User {
-        username: String::from("user1"),
-        email: String::from("user1@example.com"),
-        password: String::from("password1"),
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
     };
 
-    let (username, email, password) = (user1.username, user1.email, user1.password);
+    let rect2 = Rectangle::new(100, 300);
 
-    println!("username: {}", username);
-    println!("email: {}", email);
-    println!("password: {}", password);
+    println!("rect2 area: {}", rect2.area());
+
+    println!("rect1 area: {}", rect1.area());
 }
