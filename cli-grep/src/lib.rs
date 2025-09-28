@@ -27,13 +27,22 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Self, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Self, &'static str> {
+        args.next(); // 첫 번째 요소는 프로그램 이름이므로 무시
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
         Ok(Config {
-            query: args[1].clone(),
-            file_path: args[2].clone(),
+            query,
+            file_path,
             ignore_case: env::var("IGNORE_CASE").is_ok(),
         })
     }
@@ -41,14 +50,10 @@ impl Config {
 
 // 매개변수로 전달된 contents의 수명만큼 search함수의 반환값이 유효함을 명시
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = vec![];
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line.trim());
-        }
-    }
-
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect() // search 함수의 반환값 명시로 collect() 메서드의 변환 타입을 명시 하지 않아도 됨 (암묵적으로 Vec<&'a str>로 추론)
 }
 
 pub fn search_case_insentive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
